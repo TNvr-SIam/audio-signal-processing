@@ -1,0 +1,22 @@
+Fs = 4000; Channels = 1; bits = 16;
+r = audiorecorder(Fs,bits,Channels);
+duration = 10; disp('Recording started');
+recordblocking(r,duration);
+disp('Recording stopped');
+X = getaudiodata(r);
+%sound(X,Fs,bits);%run this command to listen to the recorded signal
+t = 0:1/Fs:(length(X)-1)/Fs;
+subplot(2,1,1); plot(t,X,'LineWidth',1.5);
+xlabel('time(sec)');
+ylabel('Aplitude');
+title('Time domain plot of the recorded signal');
+n = length(X); F = 0:(n-1)*Fs/n;
+Y = fft(X,n);
+F_0 =(-n/2:n/2-1).*(Fs/n);
+Y_0 = fftshift(Y);
+AY_0 = abs(Y_0);
+subplot(2,1,2); plot(F_0,AY_0,'LineWidth',1.5);
+xlabel('Frequency(Hz)'); ylabel('Amplitude');
+title('Frequency domain plot of the recorded signal');
+filename = 'my_voice.wav';
+audiowrite(filename,X,Fs);
